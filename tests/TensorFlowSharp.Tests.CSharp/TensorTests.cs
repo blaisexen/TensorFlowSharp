@@ -60,5 +60,33 @@ namespace TensorFlowSharp.Tests.CSharp
 			}
 		}
 
+		[Fact]
+		public void Should_VariableHaveCorrectDataType ()
+		{
+			using (var graph = new TFGraph ())
+			using (var session = new TFSession (graph)) {
+				var va = graph.VariableV2 (new TFShape (2), TFDataType.Float, operName: "name");
+
+				TFDataType actual = va.OutputType;
+				Assert.Equal (TFDataType.Float, actual);
+			}
+		}
+
+		[Fact]
+		public void Should_VariableHaveTensorDataType ()
+		{
+			double [,] a = new double [2, 10];
+
+			using (var graph = new TFGraph ())
+			using (var session = new TFSession (graph)) {
+				var ta = graph.Const (new TFTensor (a));
+
+				TFOutput va = graph.Variable (ta, operName: "name");
+
+				TFDataType actual = va.OutputType;
+				Assert.Equal (TFDataType.Double, actual);
+			}
+		}
+
 	}
 }
